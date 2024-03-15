@@ -17,7 +17,7 @@ export async function run(provider: NetworkProvider) {
     );
 
     console.log(`HighloadV2R2 deployed at address: ${highloadV2R2.address}`);
-    console.log(`mnemonic: ${mnemonic}`);
+    console.log(`mnemonic: ${mnemonic.join(' ')}`);
 
     await highloadV2R2.sendDeploy(provider.sender(), toNano('0.05'));
 
