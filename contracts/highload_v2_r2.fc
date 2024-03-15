@@ -54,8 +54,10 @@ const int op::excesses = 0xd53276db;
     var (stored_subwallet, last_cleaned, public_key, old_queries) = (ds~load_uint(32), ds~load_uint(64), ds~load_uint(256), ds~load_dict());
     ds.end_parse();
 
-    ;; clean up records expired more than 64 seconds ago
+    ;; getting the current time
     var bound = (now() << 32);
+    ;; clean up records expired more than 64 seconds ago
+    bound -= (64 << 32);
     do {
         var (old_queries', i, _, f) = old_queries.udict_delete_get_min(64);
         f~touch();
