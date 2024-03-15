@@ -211,6 +211,13 @@ describe('HighloadV2R2', () => {
         blockchain.now = now + VALID_TIMEOUT_SEC + 64 + 2;
         now = blockchain.now;
 
+        // check that queue is not empty
+        for (const queryId of queries) {
+            blockchain.now = now;
+            const processStatus = await highloadV2R2.getProcessedStatus(queryId);
+            expect(processStatus).toBe('processed');
+        }
+
         // send cleanup queue with time change
         const CLEANUP_LIMIT = 100;
         const cleanupQueueResult2 = await highloadV2R2.sendCleanupQueue(deployer.getSender(), {
