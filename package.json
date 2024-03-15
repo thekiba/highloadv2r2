@@ -1,5 +1,5 @@
 {
-    "name": "highloadv2r3",
+    "name": "highloadv2r2",
     "version": "0.0.1",
     "scripts": {
         "start": "blueprint run",
@@ -19,7 +19,10 @@
         "prettier": "^3.2.5",
         "ts-jest": "^29.1.2",
         "ts-node": "^10.9.2",
-        "typescript": "^5.3.3",
-        "tweetnacl": "^1.0.3"
+        "tweetnacl": "^1.0.3",
+        "typescript": "^5.3.3"
+    },
+    "dependencies": {
+        "ton-lite-client": "^3.0.0"
     }
 }

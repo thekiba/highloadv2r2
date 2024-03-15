@@ -18,12 +18,12 @@ import {
 } from '@ton/core';
 import { sign } from '@ton/crypto';
 
-export type HighloadV2R3Config = {
+export type HighloadV2R2Config = {
     walletId: number;
     publicKey: Buffer;
 };
 
-export function highloadV2R3ConfigToCell(config: HighloadV2R3Config): Cell {
+export function highloadV2R2ConfigToCell(config: HighloadV2R2Config): Cell {
     return beginCell()
         .storeUint(config.walletId, 32)
         .storeUint(0, 64)
@@ -32,7 +32,7 @@ export function highloadV2R3ConfigToCell(config: HighloadV2R3Config): Cell {
         .endCell();
 }
 
-export function highloadV2R3ConfigFromCell(cs: Slice): HighloadV2R3Config {
+export function highloadV2R2ConfigFromCell(cs: Slice): HighloadV2R2Config {
     const walletId = cs.loadUint(32);
     cs.skip(64);
     const publicKey = cs.loadBuffer(32);
@@ -57,7 +57,7 @@ export class HighloadV2R2 implements Contract {
             walletId = 698983191 + workchain;
         }
 
-        const data = highloadV2R3ConfigToCell({ walletId: walletId, publicKey: config.publicKey });
+        const data = highloadV2R2ConfigToCell({ walletId: walletId, publicKey: config.publicKey });
         const init = { code, data };
         return new HighloadV2R2(contractAddress(workchain, init), init);
     }
@@ -140,7 +140,7 @@ export class HighloadV2R2 implements Contract {
         if (!this.init) {
             throw new Error('Contract is not initialized');
         }
-        const config = highloadV2R3ConfigFromCell(this.init.data.beginParse());
+        const config = highloadV2R2ConfigFromCell(this.init.data.beginParse());
         const { walletId } = config;
 
         let seqno = Math.floor(Math.random() * (1 << 32));
