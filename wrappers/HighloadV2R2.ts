@@ -103,6 +103,7 @@ export class HighloadV2R2 implements Contract {
         messages: MessageRelaxed[];
         seqno?: number | null;
         sendMode?: SendMode | null;
+        now?: number | null;
         timeout?: number | null;
     }) {
         const message = this.createTransfer(args);
@@ -157,7 +158,7 @@ export class HighloadV2R2 implements Contract {
             sendMode = args.sendMode;
         }
 
-        let now = Date.now();
+        let now = Math.round(Date.now() / 1000);
         if (args.now !== null && args.now !== undefined) {
             now = args.now;
         }
@@ -247,7 +248,11 @@ function createMessageRelaxedValue() {
 }
 
 function getQueryId(now: number, timeout: number, seqno: number) {
-    const validUntil = Math.floor(now / 1000) + timeout;
+    if (now > 0xFFFFFFFF) {
+        throw new Error(`Now is too big: ${now}, should be less than 0xFFFFFFFF (4294967295)`);
+    }
+
+    const validUntil = now + timeout;
     return (BigInt(validUntil) << 32n) + BigInt(seqno);
 }
 
