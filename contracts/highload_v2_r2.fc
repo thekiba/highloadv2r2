@@ -32,6 +32,7 @@ const int op::excesses = 0xd53276db;
 
     int query_id = in_msg~load_uint(64);
     int limit = in_msg~load_uint(8);
+    throw_unless(100, limit > 0);
 
     ;; getting the stored state
     var ds = get_data().begin_parse();
