@@ -7,12 +7,14 @@ import {
     contractAddress,
     ContractProvider,
     Dictionary,
-    internal, loadMessageRelaxed,
+    internal,
+    loadMessageRelaxed,
     MessageRelaxed,
     Sender,
     SenderArguments,
     SendMode,
-    Slice, storeMessageRelaxed
+    Slice,
+    storeMessageRelaxed, toNano
 } from '@ton/core';
 import { sign } from '@ton/crypto';
 
@@ -107,6 +109,22 @@ export class HighloadV2R2 implements Contract {
         await this.send(provider, message);
     }
 
+    public async sendCleanupQueue(provider: ContractProvider, via: Sender, options?: {
+        limit?: number,
+        queryId?: bigint,
+        value?: bigint,
+    }) {
+        await provider.internal(via, {
+            value: options?.value ?? toNano(1),
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell().store(builder => {
+                builder.storeUint(Opcodes.cleanupQueue, 32);
+                builder.storeUint(options?.queryId ?? 0n, 64);
+                builder.storeUint(options?.limit ?? 50, 8);
+            }).endCell()
+        });
+    }
+
     /**
      * Create signed message.
      */
@@ -129,7 +147,7 @@ export class HighloadV2R2 implements Contract {
             seqno = args.seqno;
         }
 
-        let timeout = 5 * 60; // 15 minutes
+        let timeout = 5 * 60; // 5 minutes
         if (args.timeout !== null && args.timeout !== undefined && args.timeout < timeout) {
             timeout = args.timeout;
         }
