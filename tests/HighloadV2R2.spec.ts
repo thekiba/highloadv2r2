@@ -5,7 +5,7 @@ import '@ton/test-utils';
 import { compile } from '@ton/blueprint';
 import { mnemonicNew, mnemonicToWalletKey } from '@ton/crypto';
 
-describe('HighloadV2R3', () => {
+describe('HighloadV2R2', () => {
     let code: Cell;
 
     beforeAll(async () => {
